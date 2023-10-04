@@ -1,0 +1,11 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.emptyMessage {
+  margin-top: 70px;
+  color: rgb(112, 112, 168);
+  font-weight: 500;
+}
