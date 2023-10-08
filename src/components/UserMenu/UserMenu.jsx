@@ -1,30 +1,20 @@
-// UserMenu.js
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUserIsLoggedIn, logoutUser } from '../../redux/auth/authSlice';
+import { useDispatch } from 'react-redux';
+import { logOut } from 'redux/auth/operations';
+import { useAuth } from 'hooks';
+import { FcBusinessman } from 'react-icons/fc';
+import css from './UserMenu.module.css';
 
-const UserMenu = ({ username }) => {
-  const isLoggedIn = useSelector(selectUserIsLoggedIn);
-
+export const UserMenu = () => {
   const dispatch = useDispatch();
-
-  const handleLogout = () => {
-    // Wywołaj operację wylogowania
-    dispatch(logoutUser());
-  };
+  const { user } = useAuth();
 
   return (
-    <div>
-      {isLoggedIn ? (
-        <div>
-          <p>{username}</p>
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      ) : (
-        <p>Not logged in</p>
-      )}
+    <div className={css.wrapper}>
+      <FcBusinessman size={'1.5em'} />
+      <p className={css.username}>Welcome, {user.name}</p>
+      <button type="button" onClick={() => dispatch(logOut())}>
+        Logout
+      </button>
     </div>
   );
 };
-
-export default UserMenu;

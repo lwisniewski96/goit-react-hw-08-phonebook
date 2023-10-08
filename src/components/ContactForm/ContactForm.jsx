@@ -2,18 +2,17 @@ import { FcAddDatabase } from 'react-icons/fc';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { object, string } from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectContacts } from 'redux/selectors';
-import { addContact } from 'redux/operations';
+import { selectContacts } from 'redux/contacts/selectors';
+import { addContact } from 'redux/contacts/operations';
 import toast from 'react-hot-toast';
 import css from './ContactForm.module.css';
 
-
-const regexName = /^[a-zA-Z]+([' -][a-zA-Z ]+)*$|^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+([' -][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]+)*$/
-
+//Регулярні вирази для валідації відповідних полів форми
+const regexName = /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/;
 const regexNumber =
   /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/;
 
-
+//Схема для валідації полів форми
 const schema = object({
   name: string()
     .matches(regexName, 'Name is not valid')
@@ -33,24 +32,25 @@ export const ContactForm = () => {
   const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
-
+  //Початкові значення полів форми для Formik
   const initialValues = {
     name: '',
     number: '',
   };
 
-
+  //Функція обробки сабміту форми - додавання нового контакту в стор при сабміті форми
   const formSubmitHandler = data => {
-   
+    //Заборона додавати контакти, імена яких вже присутні у телефонній книзі.
     if (contacts.some(contact => contact.name === data.name)) {
       toast.error(`${data.name} is already in contacts.`);
       return;
     }
     dispatch(
-      addContact({ name: data.name, phone: data.number }) 
+      addContact({ name: data.name, number: data.number }) //Відправляємо action addContact в redux store
     );
   };
 
+  //Функція сабміту форми
   const handleSubmit = (values, { resetForm }) => {
     formSubmitHandler(values);
     resetForm();
@@ -69,6 +69,7 @@ export const ContactForm = () => {
           <Field
             className={css.input}
             name="name"
+            // pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           />
           <ErrorMessage
@@ -82,6 +83,7 @@ export const ContactForm = () => {
           <Field
             className={css.input}
             name="number"
+            // pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           />
         </label>

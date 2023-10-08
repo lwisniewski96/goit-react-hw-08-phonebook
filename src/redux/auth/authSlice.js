@@ -1,40 +1,43 @@
-// redux/authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
+import { register, logIn, logOut, refreshUser } from './operations';
 
 const initialState = {
-  user: null,
+  user: { name: null, email: null },
+  token: null,
   isLoggedIn: false,
-  isLoading: false,
-  error: null,
+  isRefreshing: false,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {
-    loginStart: state => {
-      state.isLoading = true;
-      state.error = null;
+  extraReducers: {
+    [register.fulfilled](state, action) {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.isLoggedIn = true;
     },
-    loginSuccess: (state, action) => {
+    [logIn.fulfilled](state, action) {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.isLoggedIn = true;
+    },
+    [logOut.fulfilled](state) {
+      state.user = { name: null, email: null };
+      state.token = null;
+      state.isLoggedIn = false;
+    },
+    [refreshUser.pending](state) {
+      state.isRefreshing = true;
+    },
+    [refreshUser.fulfilled](state, action) {
       state.user = action.payload;
       state.isLoggedIn = true;
-      state.isLoading = false;
-      state.error = null;
+      state.isRefreshing = false;
     },
-    loginFailure: (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-    logout: state => {
-      state.user = null;
-      state.isLoggedIn = false;
+    [refreshUser.rejected](state) {
+      state.isRefreshing = false;
     },
   },
 });
-
-export const { loginStart, loginSuccess, loginFailure, logout } =
-  authSlice.actions;
-
 export const authReducer = authSlice.reducer;
-export default authSlice.reducer;

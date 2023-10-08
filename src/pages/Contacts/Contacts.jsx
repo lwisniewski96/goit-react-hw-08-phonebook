@@ -1,31 +1,24 @@
-import { Routes, Route } from 'react-router-dom';
-import { ContactForm } from './ContactForm/ContactForm';
-import { Filter } from './Filter/Filter';
-import { ContactList } from './ContactList/ContactList';
-import { useSelector, useDispatch } from 'react-redux';
+import { ContactForm } from '../../components/ContactForm/ContactForm';
+import { Filter } from '../../components/Filter/Filter';
+import { ContactList } from '../../components/ContactList/ContactList';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   selectContactsCount,
   selectIsLoading,
   selectError,
-} from 'redux/selectors';
+} from 'redux/contacts/selectors';
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
-import { fetchContacts } from 'redux/operations';
+import { fetchContacts } from 'redux/contacts/operations';
 import { ColorRing } from 'react-loader-spinner';
-import { BrowserRouter as Router } from 'react-router-dom';
-import Navigation from './Navigation/Navigation';
-import Registration from './Registration/Registration';
-import Login from './Login/Login';
-import { PrivateRoute } from './PrivateRoute/PrivateRoute';
-import Contacts from './Contacts/Contacts';
 
-import css from './App.module.css';
+import css from './Contacts.module.css';
 
-export const App = () => {
+export default function App() {
+  const dispatch = useDispatch();
   const count = useSelector(selectContactsCount);
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchContacts());
@@ -33,14 +26,6 @@ export const App = () => {
 
   return (
     <div className={css.container}>
-      <Router>
-        <Navigation />
-        <Routes>
-          <Route path="/register" element={<Registration />} />
-          <Route path="/login" element={<Login />} />
-          <PrivateRoute path="/contacts" element={<Contacts />} />
-        </Routes>
-      </Router>
       <h1 className={css.title}>Phonebook</h1>
       <ContactForm />
       <h2 className={css.subtitle}>Contacts</h2>
@@ -65,6 +50,4 @@ export const App = () => {
       <Toaster position="top-right" />
     </div>
   );
-};
-
-export default App;
+}

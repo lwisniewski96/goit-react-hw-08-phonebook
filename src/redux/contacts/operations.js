@@ -1,10 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-
-axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
-
-
+//Створюємо асинхроний thunk для отримання списку контактів з бекенду
 export const fetchContacts = createAsyncThunk(
   'contacts/fetchAll',
   async function (_, { rejectWithValue }) {
@@ -17,12 +14,12 @@ export const fetchContacts = createAsyncThunk(
   }
 );
 
-
+//Створюємо асинхроний thunk для додавання нового контакту
 export const addContact = createAsyncThunk(
   'contacts/addContact',
   async function (contact, { rejectWithValue }) {
     try {
-      const { data } = await axios.post('/contacts', contact); 
+      const { data } = await axios.post('/contacts', contact); //другим параметром передаємо об'єкт даних
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -30,6 +27,7 @@ export const addContact = createAsyncThunk(
   }
 );
 
+//Створюємо асинхроний thunk для видалення контакту
 export const deleteContact = createAsyncThunk(
   'contacts/deleteContact',
   async function (contactId, { rejectWithValue }) {
