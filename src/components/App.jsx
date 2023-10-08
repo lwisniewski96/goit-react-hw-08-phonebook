@@ -1,3 +1,4 @@
+import { Routes, Route } from 'react-router-dom';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
@@ -11,13 +12,12 @@ import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
 import { fetchContacts } from 'redux/operations';
 import { ColorRing } from 'react-loader-spinner';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Navigation from './Navigation/Navigation';
-
-import Registration from './Registration/Registration'; // Dodaj import
-import Login from './Login/Login'; // Dodaj import
-import PrivateRoute from './PrivateRoute/PrivateRoute'; // Dodaj import
-import Contacts from './Contacts/Contacts'; // Dodaj import
+import Registration from './Registration/Registration';
+import Login from './Login/Login';
+import { PrivateRoute } from './PrivateRoute/PrivateRoute';
+import Contacts from './Contacts/Contacts';
 
 import css from './App.module.css';
 
@@ -36,9 +36,9 @@ export const App = () => {
       <Router>
         <Navigation />
         <Routes>
-          <Route path="/register" component={Registration} />
-          <Route path="/login" component={Login} />
-          <PrivateRoute path="/contacts" component={Contacts} />
+          <Route path="/register" element={<Registration />} />
+          <Route path="/login" element={<Login />} />
+          <PrivateRoute path="/contacts" element={<Contacts />} />
         </Routes>
       </Router>
       <h1 className={css.title}>Phonebook</h1>
@@ -66,3 +66,5 @@ export const App = () => {
     </div>
   );
 };
+
+export default App;
